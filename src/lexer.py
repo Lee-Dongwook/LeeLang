@@ -17,6 +17,8 @@ class Lexer:
             ('RBRACE', r'\}'),           # 오른쪽 중괄호
             ('SEMICOLON', r';'),         # 세미콜론
             ('PRINT', r'print'),         # print 키워드
+            ('IF', r'if'),               # if 키워드
+            ('ELSE', r'else'),           # else 키워드
             ('WHITESPACE', r'\s+'),      # 공백 (무시)
         ]
         token_regex = '|'.join(f'(?P<{name}>{regex})' for name, regex in token_specification) 

@@ -20,12 +20,29 @@ class Interpreter:
                 print(self.variables.get(value,"Undefined variable"))
             else:
                 print(value)
+        elif node["type"] == 'IF':
+            condition_type,condition_value = node["condition"]
+            condition_result = self.variables.get(condition_value, False) if condition_type == "IDENT" else int(condition_value)
+
+            if condition_result:
+                for stmt in node["if_body"]:
+                    self.evaluate(stmt)
+            elif node["else_body"]:
+                for stmt in node["else_body"]:
+                    self.evaluate(stmt)
 
 if __name__ == "__main__":
     from lexer import Lexer
     from parser import Parser
 
-    code = 'let name = "Alice"; print(name);'
+    code = """
+    let age = 20;
+    if (age > 18) {
+        print("Adult");
+    } else {
+        print("Minor");
+    }
+    """
     lexer = Lexer(code)
     tokens = lexer.tokenize()
 
