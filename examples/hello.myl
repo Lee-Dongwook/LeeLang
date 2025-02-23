@@ -1,0 +1,14 @@
+print("Hello, MyLang!");
+
+let x = 10;
+let y = 5;
+print(x + y);
+
+let numbers = [1, 2, 3, 4, 5];
+print(numbers[2]);  // 3 출력
+
+fn greet(name) {
+    print("Hello, " + name + "!");
+}
+
+greet("Alice");
