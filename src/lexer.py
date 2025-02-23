@@ -23,6 +23,8 @@ class Lexer:
             ('WHILE', r'while'),         # while 키워드
             ('IN', r'in'),               # in 키워드
             ('RANGE', r'range'),         # range 키워드
+            ('FN', r'fn'),               # fn 키워드
+            ('RETURN',r'return'),        # return 키워드
             ('WHITESPACE', r'\s+'),      # 공백 (무시)
         ]
         token_regex = '|'.join(f'(?P<{name}>{regex})' for name, regex in token_specification) 

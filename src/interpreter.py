@@ -2,6 +2,7 @@ class Interpreter:
     def __init__(self,ast):
         self.ast = ast
         self.variables = {}
+        self.functions = {}
     
     def run(self):
         """AST를 실행"""
@@ -14,6 +15,24 @@ class Interpreter:
             var_name = node["name"]
             value_type, value = node["value"]
             self.variables[var_name] = value
+        elif node["type"] == "FUNCTION":
+            func = self.functions.get(node["name"])
+            if not func:
+                raise Exception(f"Undefined function {node['name']}")
+            params = func["params"]
+            args = node["args"]
+            local_vars = {}
+            for i in range(len(params)):
+                local_vars[params[i]] = args[i][1]
+            for stmt in func["body"]:
+                if stmt["type"] == "RETURN":
+                    return_value_type, return_value = stmt["value"]
+                    print(return_value)
+                    return return_value
+                self.evaluate(stmt)
+        elif node["type"] == "RETURN":
+            value_type, value = node["value"]
+            return value    
         elif node["type"] == "PRINT":
             value_type, value = node["value"]
             if value_type == "IDENT":
