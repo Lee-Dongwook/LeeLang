@@ -34,8 +34,42 @@ class Parser:
             return self.parse_assignment()
         elif token_type == 'IDENT' and self.position + 1 < len(self.tokens) and self.tokens[self.position + 1][0] in ('PLUS','MINUS','MULTIPLY','DIVIDE','EQ','NEQ','LT','GT','AND','OR'):
             return self.parse_expression()
+        elif token_type == 'IDENT' and self.tokens[self.position + 1][0] == 'LBRACKET':
+            return self.parse_array_access()
 
         return None
+    def parse_array(self):
+        """배열을 파싱"""
+        self.position += 1  # '[' 스킵
+        elements = []
+
+        while self.tokens[self.position][0] != 'RBRACKET':
+            elements.append(self.tokens[self.position])
+            self.position += 1
+            if self.tokens[self.position][0] == 'COMMA':
+                self.position += 1  # ',' 스킵
+
+        self.position += 1  # ']' 스킵
+        return {'type': 'ARRAY', 'elements': elements}
+    
+    def parse_object(self):
+        """객체를 파싱"""
+        self.position += 1  # '{' 스킵
+        pairs = {}
+
+        while self.tokens[self.position][0] != 'RBRACE':
+            key = self.tokens[self.position][1]  # 키 값
+            self.position += 1  # 키 이동
+            self.position += 1  # ':' 스킵
+            value = self.tokens[self.position]  # 값
+            self.position += 1  # 값 이동
+            pairs[key] = value[1]
+            if self.tokens[self.position][0] == 'COMMA':
+                self.position += 1  # ',' 스킵
+
+        self.position += 1  # '}' 스킵
+        return {'type': 'OBJECT', 'pairs': pairs}
+
     
     def parse_expression(self):
         """연산식을 파싱"""
@@ -172,12 +206,31 @@ class Parser:
         self.position += 1
         return {'type':'PRINT', 'value': expr}
     
+    def parse_array_access(self):
+        """배열 요소 접근을 파싱"""
+        array_name = self.tokens[self.position][1]  # 배열 변수 이름
+        self.position += 1  # 배열 변수 스킵
+        self.position += 1  # '[' 스킵
+        index_token = self.tokens[self.position]  # 인덱스 값
+        self.position += 1  # 인덱스 이동
+        self.position += 1  # ']' 스킵
+        self.position += 1  # ';' 스킵
+
+        return {'type': 'ARRAY_ACCESS', 'array_name': array_name, 'index': index_token}
+    
     def parse_assignment(self):
         """변수 할당"""
         var_name = self.tokens[self.position][1]
         self.position += 1 
         self.position += 1 
-        value = self.tokens[self.position]  
+        # 배열인지 확인
+        if self.tokens[self.position][0] == 'LBRACKET':
+            value = self.parse_array()
+        # 객체인지 확인
+        elif self.tokens[self.position][0] == 'LBRACE':
+            value = self.parse_object()
+        else:
+            value = self.tokens[self.position]  
         self.position += 1  
         self.position += 1  
         return {'type': 'ASSIGNMENT', 'name': var_name, 'value': value}

@@ -11,6 +11,8 @@ class Lexer:
             ('IDENT', r'[a-zA-Z_]\w*'),  # 변수, 함수 이름
             ('STRING', r'"[^"]*"'),      # 문자열
             ('ASSIGN', r'='),            # 할당 연산자
+            ('LBRACKET', r'\['),         # 왼쪽 대괄호 (배열)
+            ('RBRACKET', r'\]'),         # 오른쪽 대괄호 (배열)
             ('EQ', r'=='),               # 비교 연산자 (==)
             ('NEQ', r'!='),              # 비교 연산자 (!=)
             ('LT', r'<'),                # 비교 연산자 (<)
@@ -25,6 +27,8 @@ class Lexer:
             ('RPAREN', r'\)'),           # 오른쪽 괄호
             ('LBRACE', r'\{'),           # 왼쪽 중괄호
             ('RBRACE', r'\}'),           # 오른쪽 중괄호
+            ('COMMA', r','),             # 쉼표 (배열, 객체에서 사용)
+            ('COLON', r':'),             # 콜론 (객체에서 키-값 구분)
             ('SEMICOLON', r';'),         # 세미콜론
             ('PRINT', r'print'),         # print 키워드
             ('IF', r'if'),               # if 키워드

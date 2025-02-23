@@ -13,8 +13,15 @@ class Interpreter:
         """각 노드를 해석하고 실행"""
         if node["type"] == "ASSIGNMENT":
             var_name = node["name"]
-            value_type, value = node["value"]
-            self.variables[var_name] = value
+            value_type = node["value"]["type"]
+
+            if value_type == "ARRAY":
+                self.variables[var_name] = [int(elem[1]) if elem[0] == "NUMBER" else elem[1] for elem in node["value"]["elements"]]
+            elif value_type == "OBJECT":
+                self.variables[var_name] = node["value"]["pairs"]
+            else:
+                value_type, value = node["value"]
+                self.variables[var_name] = int(value) if value_type == "NUMBER" else value
         elif node["type"] == "FUNCTION":
             func = self.functions.get(node["name"])
             if not func:
@@ -92,6 +99,16 @@ class Interpreter:
                 raise Exception(f"Unknown operator {operator_value}")
 
             print(result)
+        elif node["type"] == "ARRAY_ACCESS":
+            """배열 요소 접근"""
+            array_name = node["array_name"]
+            index_type, index_value = node["index"]
+            index = int(self.variables.get(index_value, index_value)) if index_type == "IDENT" else int(index_value)
+
+            if array_name in self.variables and isinstance(self.variables[array_name], list):
+                print(self.variables[array_name][index])  # 배열 요소 출력
+            else:
+                raise Exception(f"Undefined array {array_name}")
 
 if __name__ == "__main__":
     from lexer import Lexer
