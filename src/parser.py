@@ -18,6 +18,10 @@ class Parser:
 
         if token_type == 'IF':
             return self.parse_if()
+        elif token_type == 'FOR':
+            return self.parse_for()
+        elif token_type == 'WHILE':
+            return self.parse_while()
         elif token_type == 'IDENT' and token_value == 'print':
             return self.parse_print()
         elif token_type == 'IDENT':
@@ -49,6 +53,40 @@ class Parser:
             self.position += 1
 
         return  {'type':'IF', 'condition':condition, 'if_body':if_body, 'else_body':else_body}
+    
+    def parse_for(self):
+        """for 문을 파싱"""
+        self.position += 1
+        loop_var = self.tokens[self.position][1]
+        self.position += 2
+        self.position += 1
+        self.position += 1
+        range_value = self.tokens[self.position]
+        self.position += 2
+        self.position += 1
+
+        body = []
+        while self.tokens[self.position][0] != 'RBRACE':
+            body.append(self.parse_statement())
+        self.position += 1
+
+        return {'type':'FOR', 'loop_var':loop_var, 'range':range_value, 'body':body}
+    
+    def parse_while(self):
+        """while 문을 파싱"""
+        self.position += 1 
+        self.position += 1 
+        condition = self.tokens[self.position] 
+        self.position += 1  
+        self.position += 1  
+        self.position += 1  
+
+        body = []
+        while self.tokens[self.position][0] != 'RBRACE':
+            body.append(self.parse_statement())
+        self.position += 1  
+
+        return {'type': 'WHILE', 'condition': condition, 'body': body}
 
     def parse_print(self):
         """print 문을 파싱"""

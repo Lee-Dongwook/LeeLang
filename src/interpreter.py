@@ -23,12 +23,23 @@ class Interpreter:
         elif node["type"] == 'IF':
             condition_type,condition_value = node["condition"]
             condition_result = self.variables.get(condition_value, False) if condition_type == "IDENT" else int(condition_value)
-
             if condition_result:
                 for stmt in node["if_body"]:
                     self.evaluate(stmt)
             elif node["else_body"]:
                 for stmt in node["else_body"]:
+                    self.evaluate(stmt)
+        elif node["type"] == "FOR":
+            loop_var = node["loop_var"]
+            range_type, range_value = node["range"]
+            for i in range(int(range_value)):
+                self.variables[loop_var] = i
+                for stmt in node["body"]:
+                    self.evaluate(stmt)
+        elif node["type"] == "WHILE":
+            condition_type, condition_value = node["condition"]
+            while int(self.variables.get(condition_value, 0)):  # 값이 0이 아닐 때 실행
+                for stmt in node["body"]:
                     self.evaluate(stmt)
 
 if __name__ == "__main__":

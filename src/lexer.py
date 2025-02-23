@@ -19,6 +19,10 @@ class Lexer:
             ('PRINT', r'print'),         # print 키워드
             ('IF', r'if'),               # if 키워드
             ('ELSE', r'else'),           # else 키워드
+            ('FOR', r'for'),             # for 키워드
+            ('WHILE', r'while'),         # while 키워드
+            ('IN', r'in'),               # in 키워드
+            ('RANGE', r'range'),         # range 키워드
             ('WHITESPACE', r'\s+'),      # 공백 (무시)
         ]
         token_regex = '|'.join(f'(?P<{name}>{regex})' for name, regex in token_specification) 
