@@ -60,6 +60,38 @@ class Interpreter:
             while int(self.variables.get(condition_value, 0)):  # 값이 0이 아닐 때 실행
                 for stmt in node["body"]:
                     self.evaluate(stmt)
+        elif node["type"] == "EXPRESSION":
+            left_type, left_value = node["left"]
+            operator_type, operator_value = node["operator"]
+            right_type, right_value = node["right"]
+
+            left = int(self.variables.get(left_value, left_value)) if left_type == "IDENT" else int(left_value)
+            right = int(self.variables.get(right_value, right_value)) if right_type == "IDENT" else int(right_value)
+
+            if operator_type == "PLUS":
+                result = left + right
+            elif operator_type == "MINUS":
+                result = left - right
+            elif operator_type == "MULTIPLY":
+                result = left * right
+            elif operator_type == "DIVIDE":
+                result = left / right
+            elif operator_type == "EQ":
+                result = left == right
+            elif operator_type == "NEQ":
+                result = left != right
+            elif operator_type == "LT":
+                result = left < right
+            elif operator_type == "GT":
+                result = left > right
+            elif operator_type == "AND":
+                result = left and right
+            elif operator_type == "OR":
+                result = left or right
+            else:
+                raise Exception(f"Unknown operator {operator_value}")
+
+            print(result)
 
 if __name__ == "__main__":
     from lexer import Lexer

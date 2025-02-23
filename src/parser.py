@@ -32,8 +32,22 @@ class Parser:
             return self.parse_print()
         elif token_type == 'IDENT':
             return self.parse_assignment()
+        elif token_type == 'IDENT' and self.position + 1 < len(self.tokens) and self.tokens[self.position + 1][0] in ('PLUS','MINUS','MULTIPLY','DIVIDE','EQ','NEQ','LT','GT','AND','OR'):
+            return self.parse_expression()
 
         return None
+    
+    def parse_expression(self):
+        """연산식을 파싱"""
+        left = self.tokens[self.position]
+        self.position += 1  # 변수 이동
+        operator = self.tokens[self.position]
+        self.position += 1  # 연산자 이동
+        right = self.tokens[self.position]
+        self.position += 1  # 값 이동
+        self.position += 1  # 세미콜론 스킵
+
+        return {'type': 'EXPRESSION', 'left': left, 'operator': operator, 'right': right}
     
     def parse_function(self):
         """함수 정의 파싱"""
